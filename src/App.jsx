@@ -16,7 +16,7 @@ function App() {
       {!started ? (
         <div className="landing">
           <img src="/manquiz.png" alt="Confident man" className="hero-image" />
-          <h1>Are You the Kind of Man Women Want?</h1>
+          <h1>Are You the Kind of Man Women Desire?</h1>
           <p>This isn’t about game. It’s about growth.</p>
           <button onClick={() => setStarted(true)}>Start the Self-Assessment</button>
           <p className="ai-info">
@@ -26,7 +26,7 @@ function App() {
       ) : (
         <>
           <header>
-            <h1>Are You the Kind of Man Women Want?</h1>
+            <h1>Are You the Kind of Man Women Desire?</h1>
           </header>
           <Quiz />
         </>
