@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Quiz from './components/Quiz';
+import { Analytics } from '@vercel/analytics/react';
 
 function App() {
   const [started, setStarted] = useState(false);
@@ -39,6 +40,8 @@ function App() {
           </a>
         </p>
       </footer>
+
+      <Analytics />
     </div>
   );
 }
