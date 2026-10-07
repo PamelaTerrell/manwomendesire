@@ -61,9 +61,9 @@ const getProfile = (categories, overall) => {
     security >= 75
   ) {
     return {
-      name: "The Grounded Partner",
+      name: "The Grounded Man",
       summary:
-        "Your answers suggest a strong combination of reliability, emotional awareness, respect, and relationship maturity. Your greatest strength may be that people can experience both steadiness and emotional safety around you.",
+        "You come across as steady, capable, and emotionally grown. You likely make people feel that life with you would be easier, calmer, and more solid — which is rarer than you may think.",
     };
   }
 
@@ -75,31 +75,23 @@ const getProfile = (categories, overall) => {
     return {
       name: "The Dependable but Guarded Man",
       summary:
-        "You appear to value responsibility, loyalty, and following through. Where relationships may become harder is emotional openness—especially when you feel hurt, criticized, or vulnerable.",
+        "You probably do a lot right: you show up, handle your business, and take responsibility. Where things may get trickier is emotional openness. You may be reliable in real life, but harder to reach when feelings get involved.",
     };
   }
 
-  if (
-    emotional >= 75 &&
-    communication >= 75 &&
-    reliability < 70
-  ) {
+  if (emotional >= 75 && communication >= 75 && reliability < 70) {
     return {
       name: "The Self-Aware Builder",
       summary:
-        "You appear comfortable with emotional awareness and honest communication. Your next level may come from making your habits, responsibilities, and long-term consistency match that emotional insight.",
+        "You seem more emotionally aware than average, and that matters. Your next step is turning insight into pattern — because knowing better only really counts when it starts showing up in how you live.",
     };
   }
 
-  if (
-    security < 65 ||
-    communication < 65 ||
-    emotional < 65
-  ) {
+  if (security < 65 || communication < 65 || emotional < 65) {
     return {
       name: "The Man With Blind Spots",
       summary:
-        "You have strengths to build on, but some of your relationship habits may create distance, defensiveness, or insecurity without you intending to. Awareness is where meaningful change starts.",
+        "You may mean well more often than not. But intention and impact are not the same thing. Some of your habits may be creating friction, distance, or mistrust even when that’s not what you want.",
     };
   }
 
@@ -107,14 +99,22 @@ const getProfile = (categories, overall) => {
     return {
       name: "The Strong Foundation",
       summary:
-        "You appear to have many of the qualities that support healthy relationships. Your biggest opportunity is not becoming someone different—it is making your strongest qualities more consistent when life gets difficult.",
+        "You’ve got many of the qualities that matter most, which gives you a strong base. The next level for you is consistency — especially when stress, ego, or conflict try to take the wheel.",
+    };
+  }
+
+  if (overall >= 60) {
+    return {
+      name: "The Charming Work in Progress",
+      summary:
+        "You likely have qualities people enjoy right away, but long-term attraction tends to depend on what happens after the first impression. A little more consistency and self-awareness would make your strengths land much harder.",
     };
   }
 
   return {
     name: "The Work in Progress",
     summary:
-      "Your answers suggest that some healthy instincts are already present, while consistency and self-awareness still need attention. The encouraging part is that most of these qualities are behaviors that can be practiced and strengthened.",
+      "There’s more potential here than polish — and that’s okay. The good news is that most of what makes a man more attractive in relationships is learned behavior, not magic.",
   };
 };
 
@@ -129,13 +129,13 @@ const categoryDescriptions = {
     "Follow-through, motivation, direction, and whether others can depend on you.",
 
   "Emotional Maturity":
-    "How well you understand, regulate, and take responsibility for your emotional reactions.",
+    "How well you recognize, regulate, and take responsibility for your emotional reactions.",
 
   "Communication & Conflict":
-    "Your ability to listen, repair problems, apologize, and communicate during disagreement.",
+    "Your ability to listen, repair problems, apologize, and communicate when things get tense.",
 
   "Respect & Security":
-    "How you handle boundaries, independence, jealousy, insecurity, and another person's autonomy.",
+    "How you handle boundaries, independence, jealousy, insecurity, and another person’s autonomy.",
 
   "Intimacy & Connection":
     "Your approach to affection, vulnerability, emotional closeness, and mutually satisfying intimacy.",
@@ -143,18 +143,45 @@ const categoryDescriptions = {
 
 const getCategoryMessage = (percentage) => {
   if (percentage >= 85) {
-    return "This appears to be one of your strongest relationship skills.";
+    return "This is one of your strongest relationship instincts. It likely shows up in ways people notice.";
   }
 
   if (percentage >= 70) {
-    return "You have a healthy foundation here, with some room for greater consistency.";
+    return "You’ve got a solid handle on this area. Under pressure, there may still be a few edges worth smoothing out.";
   }
 
   if (percentage >= 55) {
-    return "This area may depend heavily on the situation, especially when you are stressed or emotionally activated.";
+    return "This area may depend a lot on your mood, stress level, or the situation. In other words: promising, but not yet automatic.";
   }
 
-  return "This may be an important area for reflection and intentional growth.";
+  return "This may be the part of your game that needs the most honesty. The upside is that improvement here could change a lot, fast.";
+};
+
+const getBlindSpotInsight = (category) => {
+  const insights = {
+    "Character & Integrity":
+      "You may have good intentions, but people tend to judge consistency more than intention. If your word and your actions don’t always match, that can quietly erode trust.",
+
+    "Self-Care & Responsibility":
+      "Being attractive isn’t just about presentation. It’s also about whether another adult feels like they’d have to manage your life for you.",
+
+    "Purpose & Reliability":
+      "Potential is appealing. Follow-through is more appealing. People notice when enthusiasm shows up more often than consistency.",
+
+    "Emotional Maturity":
+      "Strength is not pretending nothing gets to you. The more confidently you can name what you feel without making it someone else’s problem, the easier you are to be close to.",
+
+    "Communication & Conflict":
+      "A relationship can survive disagreement. What matters more is whether disagreement turns into listening, repair, defensiveness, punishment, or a competition to win.",
+
+    "Respect & Security":
+      "Insecurity itself isn’t the problem. What matters is what you do with it. Pressure, checking, testing, and control can push away the connection you’re trying to protect.",
+
+    "Intimacy & Connection":
+      "Chemistry can start attraction. Attention, curiosity, affection, and emotional presence are usually what keep intimacy from becoming mechanical.",
+  };
+
+  return insights[category];
 };
 
 const Result = ({ answers, onRetake }) => {
@@ -175,7 +202,7 @@ const Result = ({ answers, onRetake }) => {
   return (
     <main className="results-page">
       <section className="results-hero">
-        <p className="eyebrow">Your Relationship Self-Assessment</p>
+        <p className="eyebrow">Your Read</p>
 
         <h1>{profile.name}</h1>
 
@@ -183,28 +210,34 @@ const Result = ({ answers, onRetake }) => {
 
         <div className="overall-result">
           <span className="overall-number">{overallPercentage}%</span>
-          <span className="overall-label">overall assessment</span>
+          <span className="overall-label">overall read</span>
         </div>
       </section>
 
       <section className="result-highlights">
         <div className="highlight-card">
-          <p className="highlight-label">Strongest Area</p>
+          <p className="highlight-label">Your Strongest Move</p>
           <h2>{strongest[0]}</h2>
           <p>{strongest[1].percentage}%</p>
         </div>
 
         <div className="highlight-card">
-          <p className="highlight-label">Growth Opportunity</p>
+          <p className="highlight-label">Your Blind Spot</p>
           <h2>{growthArea[0]}</h2>
           <p>{growthArea[1].percentage}%</p>
         </div>
       </section>
 
+      <section className="results-intro">
+        <p className="results-kicker">
+          Attraction is rarely one thing. It’s usually a pattern.
+        </p>
+      </section>
+
       <section className="category-results">
         <div className="section-heading">
-          <p className="eyebrow">Your Breakdown</p>
-          <h2>How You Show Up</h2>
+          <p className="eyebrow">The Breakdown</p>
+          <h2>How You Tend to Show Up</h2>
         </div>
 
         {entries.map(([category, data]) => (
@@ -233,28 +266,36 @@ const Result = ({ answers, onRetake }) => {
       </section>
 
       <section className="growth-section">
-        <p className="eyebrow">Something Worth Working On</p>
+        <p className="eyebrow">Worth Working On</p>
 
         <h2>{growthArea[0]}</h2>
 
-        <p>
-          Your lowest score is not a label or a judgment. Think of it as the
-          area where a little more awareness may produce the biggest difference
-          in how other people experience you.
+        <p className="growth-intro">
+          Your lowest-scoring area is not a verdict. It’s simply the place
+          where a little more maturity, awareness, or consistency could make
+          the biggest difference in how people experience you.
+        </p>
+
+        <p className="blind-spot-insight">
+          {getBlindSpotInsight(growthArea[0])}
         </p>
       </section>
 
       <section className="results-actions">
-        <button type="button" onClick={onRetake} className="secondary-button">
-          Retake the Assessment
+        <button
+          type="button"
+          onClick={onRetake}
+          className="secondary-button"
+        >
+          Take It Again
         </button>
       </section>
 
       <p className="results-disclaimer">
-        This assessment is designed for personal reflection and entertainment.
-        It is not a psychological or clinical evaluation, and no score can
-        determine whether any individual person will find someone attractive
-        or compatible.
+        This assessment is for reflection, insight, and a little honest
+        self-checking. It is not a clinical evaluation, and no score can
+        predict chemistry, compatibility, or whether any one person will be
+        into you.
       </p>
     </main>
   );

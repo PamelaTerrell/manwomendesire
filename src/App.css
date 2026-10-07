@@ -630,6 +630,33 @@ p {
   text-align: center;
 }
 
+.results-intro {
+  margin: 4rem auto 1rem;
+  text-align: center;
+}
+
+.results-kicker {
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.growth-intro {
+  color: var(--text-soft);
+}
+
+.blind-spot-insight {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(209, 173, 104, 0.22);
+  color: var(--text);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.7;
+}
+
 .results-disclaimer {
   max-width: 720px;
   margin: 3rem auto 0;
