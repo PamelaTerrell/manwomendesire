@@ -117,17 +117,41 @@ function App() {
       )}
 
       <footer className="site-footer">
-        <p>
-          Created by{" "}
-          <a
-            href="https://pamelajterrell.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Pamela J. Terrell
-          </a>
-        </p>
-      </footer>
+  <div className="footer-inner">
+    <div className="footer-mark" aria-hidden="true">
+      STABILE
+    </div>
+
+    <div className="footer-copy">
+      <p className="creator-credit">
+        Created by{" "}
+        <a
+          href="https://pamelajterrell.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Pamela J. Terrell
+        </a>
+      </p>
+
+      <p className="brand-credit">
+        Part of the{" "}
+        <a
+          href="https://stabileusa.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Stabile USA
+        </a>{" "}
+        digital portfolio
+      </p>
+
+      <p className="brand-tagline">
+        Independent ideas. Built to last.
+      </p>
+    </div>
+  </div>
+</footer>
 
       <Analytics />
     </div>
