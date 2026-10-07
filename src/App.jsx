@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Quiz from "./components/Quiz";
 import { Analytics } from "@vercel/analytics/react";
+import { trackEvent } from "./utils/analytics";
 
 function App() {
   const [started, setStarted] = useState(false);
@@ -10,6 +11,11 @@ function App() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }, [started]);
+
+  const handleStart = () => {
+    trackEvent("quiz_started");
+    setStarted(true);
+  };
 
   return (
     <div className="app">
@@ -32,10 +38,7 @@ function App() {
                 connection.
               </p>
 
-              <button
-                className="hero-button"
-                onClick={() => setStarted(true)}
-              >
+              <button className="hero-button" onClick={handleStart}>
                 Start the Self-Assessment
               </button>
 
@@ -45,11 +48,7 @@ function App() {
             </div>
 
             <div className="hero-image-wrapper">
-              <img
-                src="/manquiz.png"
-                alt=""
-                className="hero-image"
-              />
+              <img src="/manquiz.png" alt="" className="hero-image" />
             </div>
           </section>
 
@@ -95,9 +94,7 @@ function App() {
               most days.
             </p>
 
-            <button onClick={() => setStarted(true)}>
-              Take the Assessment
-            </button>
+            <button onClick={handleStart}>Take the Assessment</button>
           </section>
         </main>
       ) : (
@@ -117,41 +114,41 @@ function App() {
       )}
 
       <footer className="site-footer">
-  <div className="footer-inner">
-    <div className="footer-mark" aria-hidden="true">
-      STABILE
-    </div>
+        <div className="footer-inner">
+          <div className="footer-mark" aria-hidden="true">
+            STABILE
+          </div>
 
-    <div className="footer-copy">
-      <p className="creator-credit">
-        Created by{" "}
-        <a
-          href="https://pamelajterrell.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Pamela J. Terrell
-        </a>
-      </p>
+          <div className="footer-copy">
+            <p className="creator-credit">
+              Created by{" "}
+              <a
+                href="https://pamelajterrell.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Pamela J. Terrell
+              </a>
+            </p>
 
-      <p className="brand-credit">
-        Part of the{" "}
-        <a
-          href="https://stabileusa.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Stabile USA
-        </a>{" "}
-        digital portfolio
-      </p>
+            <p className="brand-credit">
+              Part of the{" "}
+              <a
+                href="https://stabileusa.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Stabile USA
+              </a>{" "}
+              digital portfolio
+            </p>
 
-      <p className="brand-tagline">
-        Independent ideas. Built to last.
-      </p>
-    </div>
-  </div>
-</footer>
+            <p className="brand-tagline">
+              Independent ideas. Built to last.
+            </p>
+          </div>
+        </div>
+      </footer>
 
       <Analytics />
     </div>

@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import questions from "../data/questions";
+import { trackEvent } from "../utils/analytics";
 
 const calculateResults = (answers) => {
   const categories = {};
@@ -24,7 +25,9 @@ const calculateResults = (answers) => {
 
   Object.keys(categories).forEach((category) => {
     categories[category].percentage = Math.round(
-      (categories[category].score / categories[category].maxScore) * 100
+      (categories[category].score /
+        categories[category].maxScore) *
+        100
     );
   });
 
@@ -38,7 +41,9 @@ const calculateResults = (answers) => {
     0
   );
 
-  const overallPercentage = Math.round((totalScore / maxScore) * 100);
+  const overallPercentage = Math.round(
+    (totalScore / maxScore) * 100
+  );
 
   return {
     categories,
@@ -47,12 +52,20 @@ const calculateResults = (answers) => {
 };
 
 const getProfile = (categories, overall) => {
-  const emotional = categories["Emotional Maturity"]?.percentage || 0;
+  const emotional =
+    categories["Emotional Maturity"]?.percentage || 0;
+
   const communication =
     categories["Communication & Conflict"]?.percentage || 0;
-  const integrity = categories["Character & Integrity"]?.percentage || 0;
-  const reliability = categories["Purpose & Reliability"]?.percentage || 0;
-  const security = categories["Respect & Security"]?.percentage || 0;
+
+  const integrity =
+    categories["Character & Integrity"]?.percentage || 0;
+
+  const reliability =
+    categories["Purpose & Reliability"]?.percentage || 0;
+
+  const security =
+    categories["Respect & Security"]?.percentage || 0;
 
   if (
     overall >= 85 &&
@@ -79,7 +92,11 @@ const getProfile = (categories, overall) => {
     };
   }
 
-  if (emotional >= 75 && communication >= 75 && reliability < 70) {
+  if (
+    emotional >= 75 &&
+    communication >= 75 &&
+    reliability < 70
+  ) {
     return {
       name: "The Self-Aware Builder",
       summary:
@@ -87,7 +104,11 @@ const getProfile = (categories, overall) => {
     };
   }
 
-  if (security < 65 || communication < 65 || emotional < 65) {
+  if (
+    security < 65 ||
+    communication < 65 ||
+    emotional < 65
+  ) {
     return {
       name: "The Man With Blind Spots",
       summary:
@@ -185,19 +206,51 @@ const getBlindSpotInsight = (category) => {
 };
 
 const Result = ({ answers, onRetake }) => {
-  const { categories, overallPercentage } = calculateResults(answers);
+  const { categories, overallPercentage } =
+    calculateResults(answers);
 
   const entries = Object.entries(categories);
 
   const strongest = entries.reduce((best, current) =>
-    current[1].percentage > best[1].percentage ? current : best
+    current[1].percentage > best[1].percentage
+      ? current
+      : best
   );
 
   const growthArea = entries.reduce((lowest, current) =>
-    current[1].percentage < lowest[1].percentage ? current : lowest
+    current[1].percentage < lowest[1].percentage
+      ? current
+      : lowest
   );
 
-  const profile = getProfile(categories, overallPercentage);
+  const profile = getProfile(
+    categories,
+    overallPercentage
+  );
+
+  const hasTrackedResult = useRef(false);
+
+  useEffect(() => {
+    if (hasTrackedResult.current) return;
+
+    hasTrackedResult.current = true;
+
+    trackEvent("quiz_result_viewed", {
+      profile_name: profile.name,
+      overall_score: overallPercentage,
+
+      strongest_category: strongest[0],
+      strongest_score: strongest[1].percentage,
+
+      blind_spot_category: growthArea[0],
+      blind_spot_score: growthArea[1].percentage,
+    });
+  }, [
+    profile.name,
+    overallPercentage,
+    strongest,
+    growthArea,
+  ]);
 
   return (
     <main className="results-page">
@@ -206,74 +259,109 @@ const Result = ({ answers, onRetake }) => {
 
         <h1>{profile.name}</h1>
 
-        <p className="results-summary">{profile.summary}</p>
+        <p className="results-summary">
+          {profile.summary}
+        </p>
 
         <div className="overall-result">
-          <span className="overall-number">{overallPercentage}%</span>
-          <span className="overall-label">overall read</span>
+          <span className="overall-number">
+            {overallPercentage}%
+          </span>
+
+          <span className="overall-label">
+            overall read
+          </span>
         </div>
       </section>
 
       <section className="result-highlights">
         <div className="highlight-card">
-          <p className="highlight-label">Your Strongest Move</p>
+          <p className="highlight-label">
+            Your Strongest Move
+          </p>
+
           <h2>{strongest[0]}</h2>
+
           <p>{strongest[1].percentage}%</p>
         </div>
 
         <div className="highlight-card">
-          <p className="highlight-label">Your Blind Spot</p>
+          <p className="highlight-label">
+            Your Blind Spot
+          </p>
+
           <h2>{growthArea[0]}</h2>
+
           <p>{growthArea[1].percentage}%</p>
         </div>
       </section>
 
       <section className="results-intro">
         <p className="results-kicker">
-          Attraction is rarely one thing. It’s usually a pattern.
+          Attraction is rarely one thing. It’s usually a
+          pattern.
         </p>
       </section>
 
       <section className="category-results">
         <div className="section-heading">
-          <p className="eyebrow">The Breakdown</p>
+          <p className="eyebrow">
+            The Breakdown
+          </p>
+
           <h2>How You Tend to Show Up</h2>
         </div>
 
         {entries.map(([category, data]) => (
-          <article key={category} className="category-result-card">
+          <article
+            key={category}
+            className="category-result-card"
+          >
             <div className="category-result-heading">
               <div>
                 <h3>{category}</h3>
-                <p>{categoryDescriptions[category]}</p>
+
+                <p>
+                  {categoryDescriptions[category]}
+                </p>
               </div>
 
-              <strong>{data.percentage}%</strong>
+              <strong>
+                {data.percentage}%
+              </strong>
             </div>
 
             <div className="score-track">
               <div
                 className="score-fill"
-                style={{ width: `${data.percentage}%` }}
+                style={{
+                  width: `${data.percentage}%`,
+                }}
               />
             </div>
 
             <p className="category-message">
-              {getCategoryMessage(data.percentage)}
+              {getCategoryMessage(
+                data.percentage
+              )}
             </p>
           </article>
         ))}
       </section>
 
       <section className="growth-section">
-        <p className="eyebrow">Worth Working On</p>
+        <p className="eyebrow">
+          Worth Working On
+        </p>
 
         <h2>{growthArea[0]}</h2>
 
         <p className="growth-intro">
-          Your lowest-scoring area is not a verdict. It’s simply the place
-          where a little more maturity, awareness, or consistency could make
-          the biggest difference in how people experience you.
+          Your lowest-scoring area is not a verdict.
+          It’s simply the place where a little more
+          maturity, awareness, or consistency could make
+          the biggest difference in how people experience
+          you.
         </p>
 
         <p className="blind-spot-insight">
@@ -292,9 +380,10 @@ const Result = ({ answers, onRetake }) => {
       </section>
 
       <p className="results-disclaimer">
-        This assessment is for reflection, insight, and a little honest
-        self-checking. It is not a clinical evaluation, and no score can
-        predict chemistry, compatibility, or whether any one person will be
+        This assessment is for reflection, insight, and a
+        little honest self-checking. It is not a clinical
+        evaluation, and no score can predict chemistry,
+        compatibility, or whether any one person will be
         into you.
       </p>
     </main>
